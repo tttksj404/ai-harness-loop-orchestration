@@ -6,7 +6,7 @@
 
 | 프로젝트 | 정체 |
 |---|---|
-| [first_repo](https://github.com/tttksj404/first_repo) | 개인 AI 개발환경과 에이전트 운영 규칙을 관리하는 Agent Workspace다. |
+| first_repo (공개 링크 보류) | 개인 AI 개발환경과 에이전트 운영 규칙을 관리하는 Agent Workspace다. |
 | [ssafy-race](https://github.com/tttksj404/ssafy-race) | 주행 전략을 단일 변경 실험으로 검증하는 레이스 최적화 프로젝트다. |
 | [uncensored-AI](https://github.com/tttksj404/uncensored-AI) | 작업 강도별 Ollama·GGUF 로컬 모델을 선택·호출하는 모델 라우터·에이전트 도구다. |
 | [quiz-validator](https://github.com/tttksj404/quiz-validator) | 생성형 AI가 만든 객관식 연습문제를 점검하는 휴리스틱 품질 게이트다. |
@@ -25,7 +25,7 @@
 
 | 프로젝트 | Orchestration | Harness | Loop engineering |
 |---|---|---|---|
-| [first_repo](https://github.com/tttksj404/first_repo) | 역할·에이전트·도구·스킬로 작업을 분해하고 위임·검증·handoff 순서를 고정 | `_ai_context`, 규칙, 권한, 검증 경계 | 실패·미완료 상태를 readback과 continuation 조건에 반영 |
+| first_repo (공개 링크 보류) | 역할·에이전트·도구·스킬로 작업을 분해하고 위임·검증·handoff 순서를 고정 | `_ai_context`, 규칙, 권한, 검증 경계 | 실패·미완료 상태를 readback과 continuation 조건에 반영 |
 | [ssafy-race](https://github.com/tttksj404/ssafy-race) | spec → baseline → single change → measure → gate 순서 | 완주율·충돌·패널티·p95 loop time 게이트 | 개선이면 keep, 안정성 저하면 revert하고 다음 가설 생성 |
 | [uncensored-AI](https://github.com/tttksj404/uncensored-AI) | 작업 강도별 로컬 모델 라우팅과 `ask`·`agent` 실행 모드 | read-only·write·shell·automatic 권한 모드 | session·regression·watchdog 테스트로 경계 재검증 |
 | [quiz-validator](https://github.com/tttksj404/quiz-validator) | 생성 문항 → 규칙 → 공식 샘플 calibration → HARD/SOFT 판정 | 11개 규칙과 불확실 문항 보류 | 실패 유형을 다음 테스트 케이스로 환류 |
