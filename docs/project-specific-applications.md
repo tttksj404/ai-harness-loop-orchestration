@@ -33,6 +33,19 @@
 | [strategy-arena](https://github.com/tttksj404/strategy-arena) | 수집 → 후보 → walk-forward/holdout → 리스크 검증 | 기간·OOS·리스크 한도 경계 | 실패 원인과 재현성을 다음 실험에 반영 |
 | [realestate-economy](https://github.com/tttksj404/realestate-economy) | 수집 → 지역 계산 → 규칙 신호 → RAG → 로컬 모델 → API | 최신성·출처·key·health check | 수집·API 실패를 다음 실행 조건과 테스트로 환류 |
 
+## AI를 활용한 기획과 보안 설계
+
+AI는 기획자의 판단을 대신하는 최종 결정자가 아니라, 사용자 시나리오·위험 시나리오·질문·코드 후보를 빠르게 만드는 보조로 사용했다. 후보는 사람 검토와 실제 실행을 통과한 경우에만 다음 단계로 보냈다.
+
+| 기획 사례 | AI 활용 | 보안·책임 경계 |
+|---|---|---|
+| Sentinel-30 | 보이스피싱 발화 → 증거 → 위험 유형 → 대응 시나리오로 AI 보안 흐름을 설계 | 출처·개인정보·운영자 검토, production 성과 주장 금지 |
+| Document Forge | 문서 처리 뒤 동의된 경우에만 AI writing proxy를 호출하도록 기획 | 브라우저 우선, 파일·ZIP·HTML·shell·timeout·임시공간 제한 |
+| StockPulse AI | 규칙 기준선 뒤에 선택적 LLM 설명을 붙이는 판단 보조로 재기획 | `evidence_trace`, 표현 제한, 모델·키 오류 fallback |
+| 현재 Jupyter | Qwen3-VL·CLIP·SOLIDER·ReID·teacher 후보를 역할별 실험으로 분리 | provenance·외부 전송 조건·held-out·identity·track·사람 검토 |
+
+공통 흐름은 `기획 후보 생성 → 데이터·권한·위험 검토 → 작은 실행 → 근거 확인 → 승인 또는 보류`다. AI를 빠르게 활용하되 개인정보·비밀값·잘못된 사양과 근거 없는 자동화가 업무에 바로 반영되지 않도록 했다.
+
 ## 보조 색인과 비공개 사례
 
 `ai-harness-loop-orchestration`은 위 프로젝트들을 연결하는 공개 색인이다. `first_repo`, StockPulse AI, 현재 Jupyter 기반 AI 모델 프로젝트, Document Forge, company-news-analyzer, KRA·keirin EV, codex-global-skills, we-meet, SSAFY 프로젝트는 실제 경험 근거를 보유하지만 공개 링크를 쓰지 않거나 공개 범위를 제한한다. 따라서 이 저장소에는 개인 데이터·비공개 코드·실험 산출물을 복사하지 않고 적용 방식만 기록한다.
