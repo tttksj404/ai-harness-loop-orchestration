@@ -35,7 +35,7 @@
 
 ## 보조 색인과 비공개 사례
 
-`ai-harness-loop-orchestration`은 위 프로젝트들을 연결하는 공개 색인이다. StockPulse AI, 현재 Jupyter 기반 AI 모델 프로젝트, Document Forge, company-news-analyzer, KRA·keirin EV, codex-global-skills, we-meet, SSAFY 프로젝트는 실제 경험 근거를 보유하지만 공개 링크가 없거나 공개 범위를 제한한다. 따라서 이 저장소에는 개인 데이터·비공개 코드·실험 산출물을 복사하지 않고 적용 방식만 기록한다.
+`ai-harness-loop-orchestration`은 위 프로젝트들을 연결하는 공개 색인이다. `first_repo`, StockPulse AI, 현재 Jupyter 기반 AI 모델 프로젝트, Document Forge, company-news-analyzer, KRA·keirin EV, codex-global-skills, we-meet, SSAFY 프로젝트는 실제 경험 근거를 보유하지만 공개 링크를 쓰지 않거나 공개 범위를 제한한다. 따라서 이 저장소에는 개인 데이터·비공개 코드·실험 산출물을 복사하지 않고 적용 방식만 기록한다.
 
 ### StockPulse AI / AntHill
 - 무엇: 뉴스·가격·규칙 기반 신호로 사용자의 매매 판단을 돕는 개인용 웹 서비스 프로토타입이다.
