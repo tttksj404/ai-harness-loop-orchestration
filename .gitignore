@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*
+secrets*
+auth.json
+browser-profile/
+outputs/
+artifacts/
+__pycache__/
+.venv/
