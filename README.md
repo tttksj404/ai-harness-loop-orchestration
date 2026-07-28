@@ -57,7 +57,7 @@ AI에게 더 긴 프롬프트를 주는 일이 아니라, 모델이 움직일 �
 
 ## 프로젝트에 적용한 방식
 
-이 구조는 제조 파일럿만을 위한 이론이 아닙니다. `StockPulse AI`, `quiz-validator`, `Strategy Arena`, `realestate-economy`, `Document Forge`, `company-news-analyzer`, `KRA/keirin EV`, `codex-global-skills`, `Sentinel-30`, `we-meet`, SSAFY 프로젝트, 현재 Jupyter 모델 실험에 각각 다른 형태로 적용했습니다. 프로젝트별로 어떤 역할을 어떤 순서로 배치했는지, 무엇을 차단했는지, 실패를 다음 실행에 어떻게 돌렸는지는 [project-applications.md](docs/project-applications.md)에 정리했습니다.
+이 구조는 제조 파일럿만을 위한 이론이 아닙니다. `StockPulse AI`, `quiz-validator`, `Strategy Arena`, `realestate-economy`, `Document Forge`, `company-news-analyzer`, `KRA/keirin EV`, `codex-global-skills`, `Sentinel-30`, `we-meet`, SSAFY 프로젝트, 현재 Jupyter 모델 실험에 각각 다른 형태로 적용했습니다. 공개 프로젝트의 목적과 O/H/L 적용은 [project-specific-applications.md](docs/project-specific-applications.md)에, 비공개·로컬 프로젝트의 근거는 별도 비공개 문서에 정리했습니다.
 
 ## 실험 readback 계약
 
