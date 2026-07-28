@@ -53,6 +53,10 @@ AI에게 더 긴 프롬프트를 주는 일이 아니라, 모델이 움직일 �
 
 `examples/pilot-charter.md`에는 제조·품질·고객지원 환경에서 검토할 수 있는 승인 문서 Q&A, 검사 기록 요약, 고객 이슈 초안의 파일럿 계약을 적었습니다. 실제 데이터 대신 비식별·가상 입력만 사용하고, 먼저 볼 KPI와 보류 조건을 함께 둡니다.
 
+## 프로젝트에 적용한 방식
+
+이 구조는 제조 파일럿만을 위한 이론이 아닙니다. `StockPulse AI`, `quiz-validator`, `Strategy Arena`, `realestate-economy`, `Document Forge`, `company-news-analyzer`, `KRA/keirin EV`, `codex-global-skills`, `Sentinel-30`, `we-meet`, SSAFY 프로젝트, 현재 Jupyter 모델 실험에 각각 다른 형태로 적용했습니다. 프로젝트별로 어떤 역할을 어떤 순서로 배치했는지, 무엇을 차단했는지, 실패를 다음 실행에 어떻게 돌렸는지는 [project-applications.md](docs/project-applications.md)에 정리했습니다.
+
 ## 실험 readback 계약
 
 모델 실험은 아래 산출물을 한 묶음으로 읽어야 합니다.
