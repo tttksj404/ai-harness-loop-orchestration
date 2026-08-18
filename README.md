@@ -1,6 +1,6 @@
 # AI Harness, Orchestration & Loop Engineering
 
-프로젝트별 적용 사례는 [docs/project-specific-applications.md](docs/project-specific-applications.md)에서 확인할 수 있다. 이 저장소는 여러 프로젝트의 사례를 하나로 합쳐 주장하지 않고, 각 프로젝트를 독립 항목으로 연결하는 포트폴리오 색인이다.
+프로젝트별 적용 사례는 [docs/project-specific-applications.md](docs/project-specific-applications.md)에서 확인할 수 있다. 실행 그래프를 설계하는 방법은 [Graph Engineering 가이드](docs/graph-engineering.md)에서 별도로 다룬다. 이 저장소는 여러 프로젝트의 사례를 하나로 합쳐 주장하지 않고, 각 프로젝트를 독립 항목으로 연결하는 포트폴리오 색인이다.
 
 생성형 AI를 업무에 붙일 때 모델 이름보다 먼저 설계해야 할 운영 구조를 정리한 포트폴리오입니다.
 
@@ -10,18 +10,19 @@
 
 ```mermaid
 flowchart LR
-    A[업무 요청] --> B[위험·데이터 등급 분류]
-    B --> C[하네스: 권한·도구·출력 계약]
-    C --> D[오케스트레이션: 검색·작성·검토 라우팅]
-    D --> E[모델·도구 실행]
-    E --> F[근거·구조·정책 검증]
-    F --> G{승격 기준 통과?}
-    G -->|예| H[사람 승인 후 업무 반영]
-    G -->|아니오| I[보류·fallback·실패 기록]
-    H --> J[지표·trace·사용자 피드백]
-    I --> J
-    J --> K[다음 루프의 테스트·규칙·SOP]
-    K --> B
+    A["업무 요청"] --> B["위험·데이터 등급 분류"]
+    B --> C["하네스: 권한·도구·출력 계약"]
+    C --> D["오케스트레이션: 검색·작성·검토 라우팅"]
+    D --> E["Graph: 노드·엣지·분기·join·checkpoint"]
+    E --> F["모델·도구 실행"]
+    F --> G["근거·구조·정책 검증"]
+    G --> H{"승격 기준 통과?"}
+    H -->|"예"| I["사람 승인 후 업무 반영"]
+    H -->|"아니오"| J["보류·fallback·실패 기록"]
+    I --> K["지표·trace·사용자 피드백"]
+    J --> K
+    K --> L["다음 루프의 테스트·규칙·SOP"]
+    L --> B
 ```
 
 ## 세 가지 설계
@@ -40,6 +41,10 @@ AI에게 더 긴 프롬프트를 주는 일이 아니라, 모델이 움직일 �
 ### Orchestration
 
 하나의 모델에 모든 판단을 맡기지 않고 업무의 역할을 나눕니다. 예를 들어 요청 분류 → 승인된 문서 검색 → 초안 작성 → 규칙 검증 → 담당자 검토 → 확정 반영의 순서를 정합니다. 단순한 업무에는 단일 호출을 쓰고, 위험하거나 긴 업무에는 검토자·승인자·독립 검증을 추가합니다.
+
+### Graph engineering
+
+오케스트레이션의 순서를 노드·엣지·상태·checkpoint로 명시해 다음 실행을 재현할 수 있게 합니다. 조건부 route, 병렬 검증과 join, 사람 승인 interrupt, 재시도·보상 경로가 실제 trace와 일치하는지 확인합니다. 지식 그래프나 그래프 신경망이 아니라 **업무 실행 그래프**를 뜻합니다. 자세한 node/edge/state 계약과 Mermaid 토폴로지는 [Graph Engineering 가이드](docs/graph-engineering.md)를 참고합니다.
 
 ### Loop engineering
 

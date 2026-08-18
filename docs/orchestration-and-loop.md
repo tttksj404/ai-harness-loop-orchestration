@@ -12,6 +12,26 @@
 
 단순한 요청에 복잡한 다중 에이전트를 붙이지 않는다. 유연한 판단이 필요한 곳에만 agentic routing을 쓰고, 반복적이고 예측 가능한 업무는 결정론적 workflow로 남긴다.
 
+## Graph로 실행 순서를 고정하기
+
+오케스트레이션 표의 흐름이 실제 운영에서 반복되면 이를 실행 그래프로 승격한다. 그래프는 지식 그래프가 아니라 `어떤 상태에서 어떤 작업을 다음에 실행할지`를 표현하는 control-flow graph다.
+
+```mermaid
+flowchart LR
+    A["classify"] --> B["permission"]
+    B --> C["retrieve"]
+    C --> D1["fact check"]
+    C --> D2["policy check"]
+    D1 --> E["join"]
+    D2 --> E
+    E --> F["draft"]
+    F --> G["review"]
+    G --> H["human approval"]
+    H --> I["write and readback"]
+```
+
+그래프를 만들 때는 노드별 입력·출력 계약과 side effect를 먼저 적고, 실패·재시도·보류·재개 엣지를 함께 정의한다. 병렬 결과를 합치는 `join`은 부분 성공과 충돌을 검사해야 하며, 사람 승인 전에는 쓰기·외부 전송을 연결하지 않는다. 적용 기준과 실행 계약은 [Graph Engineering 가이드](graph-engineering.md)를 따른다.
+
 ## 루프 상태
 
 ```text

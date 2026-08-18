@@ -2,6 +2,8 @@
 
 이 저장소는 하나의 `AI Harness` 프로젝트를 대표하는 저장소가 아니라, 여러 프로젝트에서 오케스트레이션·하네스·루프 엔지니어링을 어떻게 적용했는지 보여주는 색인이다.
 
+공통 실행 토폴로지와 node·edge·state 계약은 [Graph Engineering 가이드](graph-engineering.md)에 별도로 정리했다. 아래 프로젝트별 설명은 이 공통 그래프를 그대로 복사했다는 뜻이 아니라, 각 프로젝트에서 실제로 확인 가능한 범위만 O/H/L 언어로 매핑한 것이다.
+
 ## 프로젝트 정체: 무엇을 만든 프로젝트인가
 
 | 프로젝트 | 정체 |
@@ -32,6 +34,25 @@
 | [AI- / Sentinel-30](https://github.com/tttksj404/AI-) | 발화 → 구조화 증거 → 위험 유형 → 대응 시나리오 | 출처·개인정보·사람 검토 지점 | 누락·오탐 시나리오를 다음 분류 기준에 반영 |
 | [strategy-arena](https://github.com/tttksj404/strategy-arena) | 수집 → 후보 → walk-forward/holdout → 리스크 검증 | 기간·OOS·리스크 한도 경계 | 실패 원인과 재현성을 다음 실험에 반영 |
 | [realestate-economy](https://github.com/tttksj404/realestate-economy) | 수집 → 지역 계산 → 규칙 신호 → RAG → 로컬 모델 → API | 최신성·출처·key·health check | 수집·API 실패를 다음 실행 조건과 테스트로 환류 |
+
+## 공통 그래프 적용 순서
+
+프로젝트마다 다음 순서를 채운 뒤, 실제 trace에서 반복되는 분기만 그래프 노드로 고정한다.
+
+```mermaid
+flowchart TD
+    A["기준선 업무"] --> B["trace 수집"]
+    B --> C{ "반복되는 분기·검증·복구가 있는가?" }
+    C -->|"아니오"| D["단순 workflow 유지"]
+    C -->|"예"| E["node·edge·state 계약"]
+    E --> F["읽기 전용 graph"]
+    F --> G["독립 검증·사람 승인"]
+    G --> H["mock write·readback"]
+    H --> I["승격 또는 보류"]
+    I --> B
+```
+
+세부 기준은 [Graph Engineering 가이드](graph-engineering.md)의 `Trace first, formalize second`, 표준 업무 토폴로지, 운영 승격 체크리스트에서 확인한다.
 
 ## AI를 활용한 기획과 보안 설계
 

@@ -41,3 +41,13 @@
 4. 예외·금지 조건을 검출했는가?
 5. 담당자가 승인할 수 있는 형태인가?
 6. 실행 기록에서 다음 개선점을 찾을 수 있는가?
+
+## 그래프와의 경계
+
+하네스가 허용하는 권한과 도구가 그래프의 노드 계약보다 우선한다. 그래프에 `write` 노드가 있어도 하네스가 승인 전 쓰기를 금지하면 `waiting_human_approval` 또는 `blocked`로 종료해야 한다.
+
+- 노드는 입력·출력 schema, side effect, 허용 도구, evidence, retry budget을 가진다.
+- 엣지는 성공·실패·route·parallel·join·interrupt·compensation 조건을 가진다.
+- 실행 상태에는 `run_id`, `checkpoint`, node run, evidence, decision, idempotency key가 남는다.
+
+실행 그래프의 전체 설계와 예시는 [Graph Engineering 가이드](graph-engineering.md)와 [`examples/graph-run-contract.yaml`](../examples/graph-run-contract.yaml)에 있다.

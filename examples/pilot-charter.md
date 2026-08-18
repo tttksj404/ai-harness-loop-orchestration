@@ -27,6 +27,25 @@
   -> 확정 또는 보류
 ```
 
+## 그래프로 표현할 때
+
+첫 파일럿은 아래처럼 `write` 전까지를 읽기 전용 그래프로 만든다. 사실·정책·최신성 검증처럼 서로 독립적인 작업만 병렬로 보내고, `join`에서 필수 검증 누락·충돌·타임아웃을 확인한다.
+
+```text
+classify
+  -> permission
+  -> retrieve
+  -> parallel(fact-check, policy-check, freshness-check)
+  -> join
+  -> draft
+  -> independent-review
+  -> human-approval checkpoint
+  -> mock-write
+  -> readback
+```
+
+노드·엣지·상태·재시도·멱등성 계약은 [`examples/graph-run-contract.yaml`](graph-run-contract.yaml)을, 설계 이유와 실패 진단은 [`docs/graph-engineering.md`](../docs/graph-engineering.md)를 참고한다. 사람 승인 전에 실제 업무 시스템에 쓰거나 외부로 전송하지 않는다.
+
 ## 첫 KPI
 
 - 검색에 걸린 시간

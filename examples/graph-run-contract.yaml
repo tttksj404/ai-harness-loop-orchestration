@@ -1,0 +1,187 @@
+version: "1"
+graph_id: "approved-doc-qna-v1"
+purpose: "승인된 문서에서 답변 초안을 만들고 사람 승인 전에는 쓰지 않는다"
+
+state_schema:
+  required:
+    - "run_id"
+    - "request"
+    - "permission"
+    - "evidence"
+    - "draft"
+    - "decision"
+    - "checkpoint"
+  statuses:
+    - "running"
+    - "review"
+    - "waiting_human_approval"
+    - "approved"
+    - "blocked"
+    - "completed"
+
+nodes:
+  - id: "classify_request"
+    type: "route"
+    side_effect: "none"
+    allowed_tools: []
+    output_schema: "request_type, risk_level, data_class"
+    retry_budget: 0
+    on_failure: "review"
+
+  - id: "check_permission"
+    type: "policy_check"
+    side_effect: "none"
+    allowed_tools:
+      - "approved-document-index.read"
+    output_schema: "permission_decision, scope, denied_reasons"
+    retry_budget: 1
+    on_failure: "blocked"
+
+  - id: "retrieve_approved_sources"
+    type: "retrieval"
+    side_effect: "none"
+    allowed_tools:
+      - "approved-document-index.read"
+    output_schema: "evidence_refs, source_versions"
+    evidence_required: true
+    retry_budget: 2
+    on_failure: "review"
+
+  - id: "verify_facts"
+    type: "verification"
+    side_effect: "none"
+    allowed_tools: []
+    output_schema: "fact_check, conflicts"
+    evidence_required: true
+    retry_budget: 1
+    on_failure: "review"
+
+  - id: "verify_policy_and_privacy"
+    type: "verification"
+    side_effect: "none"
+    allowed_tools: []
+    output_schema: "policy_check, privacy_check, violations"
+    evidence_required: true
+    retry_budget: 1
+    on_failure: "blocked"
+
+  - id: "draft_answer"
+    type: "synthesis"
+    side_effect: "draft"
+    allowed_tools: []
+    output_schema: "answer, citations, uncertainties, status"
+    evidence_required: true
+    retry_budget: 1
+    on_failure: "review"
+
+  - id: "independent_review"
+    type: "review"
+    side_effect: "none"
+    allowed_tools: []
+    output_schema: "review_status, issues, required_edits"
+    evidence_required: true
+    retry_budget: 1
+    on_failure: "review"
+
+  - id: "human_approval"
+    type: "interrupt"
+    side_effect: "none"
+    allowed_tools: []
+    output_schema: "approval, approver, approved_at, comment"
+    approval_required: true
+    retry_budget: 0
+    on_failure: "blocked"
+
+  - id: "write_result"
+    type: "write"
+    side_effect: "write"
+    allowed_tools:
+      - "work-system.write"
+    output_schema: "idempotency_key, diff, write_receipt"
+    approval_required: true
+    retry_budget: 0
+    on_failure: "compensate"
+
+  - id: "verify_write"
+    type: "readback"
+    side_effect: "none"
+    allowed_tools:
+      - "work-system.read"
+    output_schema: "readback_status, receipt_match"
+    retry_budget: 1
+    on_failure: "review"
+
+  - id: "blocked"
+    type: "terminal"
+    side_effect: "none"
+    allowed_tools: []
+    output_schema: "status, reason, next_action"
+    retry_budget: 0
+    on_failure: "blocked"
+
+  - id: "compensate"
+    type: "recovery"
+    side_effect: "write"
+    allowed_tools:
+      - "work-system.compensate"
+    output_schema: "compensation_status, receipt"
+    approval_required: true
+    retry_budget: 0
+    on_failure: "blocked"
+
+edges:
+  - from: "classify_request"
+    to: "check_permission"
+    when: "request_type is supported"
+  - from: "check_permission"
+    to: "retrieve_approved_sources"
+    when: "permission_decision == allowed"
+  - from: "check_permission"
+    to: "blocked"
+    when: "permission_decision != allowed"
+  - from: "retrieve_approved_sources"
+    to: "verify_facts"
+    kind: "parallel"
+  - from: "retrieve_approved_sources"
+    to: "verify_policy_and_privacy"
+    kind: "parallel"
+  - from: "verify_facts"
+    to: "draft_answer"
+    kind: "join"
+    when: "all required verification results are present and pass"
+  - from: "verify_policy_and_privacy"
+    to: "draft_answer"
+    kind: "join"
+    when: "all required verification results are present and pass"
+  - from: "draft_answer"
+    to: "independent_review"
+    when: "draft has citations and uncertainties"
+  - from: "independent_review"
+    to: "draft_answer"
+    when: "required_edits is not empty"
+  - from: "independent_review"
+    to: "human_approval"
+    when: "review_status == pass"
+  - from: "human_approval"
+    to: "write_result"
+    kind: "interrupt_resume"
+    when: "approval == approved"
+  - from: "write_result"
+    to: "verify_write"
+    when: "write_receipt exists"
+  - from: "write_result"
+    to: "compensate"
+    kind: "failure"
+    when: "write failed after a side effect"
+  - from: "compensate"
+    to: "blocked"
+    kind: "failure"
+    when: "compensation failed or needs an operator"
+
+policies:
+  max_graph_seconds: 120
+  max_model_calls: 6
+  max_total_retries: 4
+  require_idempotency_key_for: "write_result"
+  require_human_approval_before: "write_result"
+  default_failure_status: "review"
