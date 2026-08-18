@@ -25,7 +25,7 @@ flowchart LR
     L --> B
 ```
 
-## 세 가지 설계
+## 네 가지 설계
 
 ### Harness engineering
 
